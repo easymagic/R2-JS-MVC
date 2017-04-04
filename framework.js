@@ -3,8 +3,8 @@ var R2 = {};
 
   function Event_(sender){
 
-  	 this.sender = sender;
-  	 this.listeners = [];
+     this.sender = sender;
+     this.listeners = [];
 
   }
 
@@ -13,17 +13,17 @@ var R2 = {};
   
      attach:function(cb){
 
-     	 this.listeners.push(cb);
+       this.listeners.push(cb);
 
      },
 
      notify:function(dt){
 
-     	 for (var i in this.listeners){
+       for (var i in this.listeners){
 
-     	 	 this.listeners[i](this.sender,dt);
+         this.listeners[i](this.sender,dt);
 
-     	 }
+       }
 
      }
 
@@ -48,7 +48,7 @@ var R2 = {};
 
   function Model(cfg){
 
-  	 for (var i in cfg){
+     for (var i in cfg){
 
       if (typeof(cfg[i]) == 'function'){
 
@@ -78,7 +78,7 @@ var R2 = {};
 
 
 
-  	 }
+     }
       
 
   }
@@ -121,7 +121,7 @@ var R2 = {};
 
 
   r2.Model.create = function(name,cfg){
-  	
+    
       r2.models[name] = function(){
         return new Model(cfg);
       };
@@ -146,6 +146,32 @@ var R2 = {};
   };
 
 
+  r2.View.templates = {};
+
+  r2.View.load_template = function(tpl,cb){
+
+     if (r2.View.templates[tpl]){
+       
+       cb($(r2.View.templates[tpl]));
+
+     }else{
+      
+      $.ajax({
+        url:'templates/' + tpl + '.html',
+        success:function(dt){
+ 
+           r2.View.templates[tpl] = dt;
+
+           cb($(r2.View.templates[tpl]));           
+
+        }
+      });
+
+     }
+
+  };
+
+
 
 
 
@@ -153,7 +179,7 @@ var R2 = {};
 
 
 
-//Excample .....
+//Example .....
 
 // R2.Model.create('user',{
 //   items:['AKL','CHRITO','JEN-J','AMAKA'],
@@ -173,7 +199,9 @@ var R2 = {};
 //   },
 //   remove:function(id,evt){
 
-//      this.items.splice(id);
+//      this.items.splice(id,1);
+
+//      console.log(this.items);
 
 //      evt.notify(this);
 
@@ -210,32 +238,46 @@ var R2 = {};
 
 
 //          $.each(dt.items,function(k,v){
+
+//            R2.View.load_template('row',function($template){
+
+                 
+//                  var $el = $template.find('#sel');
+//                  var $remove = $template.find('button');
+//                  var $parent = $template;
+
+//                  $el.html(v);
+
+//                  // var $el = $('<button>' + v  + '</button>');  
+//                  // var $remove = $('<button>Remove</button>')
+//                  // var $parent = $('<div></div');
+
+//                  $parent.append($el);
+//                  $parent.append($remove);
+
+//                  $el.on('click',function(){
+
+//                           user_obj.select(k);
+//                           index = k;
+//                           $cur_el = $(this);
+
+//                  });
+
+//                  $remove.on('click',function(){
+//                   if (confirm("You you want to confirm this action?")){
+
+//                      index = k;
+
+//                      user_obj.remove(index);
+
+//                   }
+//                  });
+
+//                  tmpl.append($template);
+
+
+//            });
              
-//            var $el = $('<button>' + v  + '</button>');  
-//            var $remove = $('<button>Remove</button>')
-//            var $parent = $('<div></div');
-
-//            $parent.append($el);
-//            $parent.append($remove);
-
-//            $el.on('click',function(){
-
-//                     user_obj.select(k);
-//                     index = k;
-//                     $cur_el = $(this);
-
-//            });
-
-//            $remove.on('click',function(){
-//             if (confirm("You you want to confirm this action?")){
-
-//                user_obj.remove(index);
-
-//             }
-//            });
-
-//            tmpl.append($parent);
-
 
 
 //          });
